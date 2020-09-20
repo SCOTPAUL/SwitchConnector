@@ -88,6 +88,8 @@ unsafe extern "system" fn bluetooth_registration_callback(_: *mut c_void, callba
 }
 
 fn main() -> Result<()> {
+    println!("Lookin for pros");
+
     unsafe { 
         // Remove pro controller if already paired
         match get_pro_controller(true) {
@@ -112,6 +114,8 @@ fn main() -> Result<()> {
         println!("Registering callback {}", BluetoothRegisterForAuthenticationEx(&mut device.device_info, &mut callback_handle as *mut HBLUETOOTH_AUTHENTICATION_REGISTRATION, Some(bluetooth_registration_callback), null_mut()));
 
         println!("Authing {}", BluetoothAuthenticateDevice(null_mut(), null_mut(), &mut device.device_info, U16CString::from_str("0000").unwrap().into_raw(), 4));
+
+        std::thread::sleep(std::time::Duration::from_secs(3));
 
         BluetoothSetServiceState(null_mut(), &mut device.device_info, &mut HumanInterfaceDeviceServiceClass_UUID, BLUETOOTH_SERVICE_ENABLE);
     }
